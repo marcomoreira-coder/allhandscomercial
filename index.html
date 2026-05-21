@@ -210,11 +210,10 @@ body::after {
     <aside class="panel side-panel">
       <div class="rank-head">
         <div class="rank-icon"><i class="ti ti-trophy"></i></div>
-        <div><h2>Ranking ao vivo</h2><p>Últimos 3 minutos</p></div>
+        <div><h2>Ranking ao vivo</h2><p>Últimos 6 minutos</p></div>
       </div>
       <div class="rank-list" id="ranking-list"></div>
-      <div class="live-note"><i class="ti ti-clock-hour-3"></i><span>O ranking atualiza em tempo real e zera automaticamente a cada <strong>3 minutos</strong>.</span></div>
-    </aside>
+          </aside>
   </section>
 
   <section class="profiles-section">
@@ -241,7 +240,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-const EXPIRATION_MS = 3 * 60 * 1000;
+const EXPIRATION_MS = 6 * 60 * 1000;
 const rankingRef = ref(database, 'ranking');
 
 const QUESTIONS = [
@@ -403,7 +402,7 @@ function renderRanking() {
   const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
   const list = document.getElementById('ranking-list');
   if (!sorted.length) {
-    list.innerHTML = '<div class="empty">Ninguém respondeu nos últimos 3 minutos.<br>O ranking está limpo para a próxima rodada.</div>';
+    list.innerHTML = '<div class="empty">Ninguém respondeu nos últimos 6 minutos.<br>O ranking está limpo para a próxima rodada.</div>';
     return;
   }
   list.innerHTML = sorted.map(([key, count], i) => {
