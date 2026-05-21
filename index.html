@@ -339,7 +339,7 @@ footer {
     <div id="ranking-list"></div>
     <div class="refresh-note">
       <i class="ti ti-info-circle" aria-hidden="true"></i>
-      Os dados ficam salvos no dispositivo de cada pessoa. Para um ranking centralizado, hospede com banco de dados.
+      Ranking atualizado em tempo real com as respostas de todo o time.
     </div>
     <button class="btn-secondary" id="btn-back-home" style="margin-top:1rem">← Voltar</button>
   </div>
@@ -348,7 +348,23 @@ footer {
 
 <footer>quiz de integração · feito com carinho ☕</footer>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAx0AXPZX5ZpYR9JlYAytIFulfjC8j8atM",
+  authDomain: "allhandscomercial-30e3d.firebaseapp.com",
+  databaseURL: "https://allhandscomercial-30e3d-default-rtdb.firebaseio.com",
+  projectId: "allhandscomercial-30e3d",
+  storageBucket: "allhandscomercial-30e3d.firebasestorage.app",
+  messagingSenderId: "523200252459",
+  appId: "1:523200252459:web:975439350a5a077fef386e"
+};
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
 const QUESTIONS = [
   {
     text: "Quando alguém te pede algo urgente, você...",
@@ -486,10 +502,14 @@ function showResult() {
   document.getElementById('result-desc').textContent = p.desc;
   document.getElementById('result-traits').innerHTML = p.traits.map(t => '<span class="trait">' + t + '</span>').join('');
 
-  const existing = ranking.findIndex(r => r.name.toLowerCase() === userName.toLowerCase());
-  const entry = { name: userName, profileKey: key };
-  if (existing >= 0) ranking[existing] = entry; else ranking.push(entry);
-  saveRanking();
+  const entryId = userName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-');
+
+  set(ref(database, 'ranking/' + entryId), {
+    name: userName,
+    profileKey: key,
+    updatedAt: Date.now()
+  });
+
   show('result');
 }
 
@@ -547,6 +567,12 @@ document.getElementById('btn-ranking').addEventListener('click', () => { renderR
 document.getElementById('btn-see-ranking').addEventListener('click', () => { renderRanking(); show('ranking'); });
 document.getElementById('btn-replay').addEventListener('click', () => { profileScores={}; answers=[]; currentQ=0; show('home'); });
 document.getElementById('btn-back-home').addEventListener('click', () => show('home'));
+onValue(ref(database, 'ranking'), (snapshot) => {
+  const data = snapshot.val() || {};
+  ranking = Object.values(data);
+  renderRanking();
+});
+
 </script>
 </body>
 </html>
