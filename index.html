@@ -350,7 +350,7 @@ footer {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAx0AXPZX5ZpYR9JlYAytIFulfjC8j8atM",
@@ -445,8 +445,6 @@ const PROFILES = {
 let userName = '', answers = [], currentQ = 0, profileScores = {};
 
 let ranking = [];
-try { ranking = JSON.parse(localStorage.getItem('quiz_vendedor_v2') || '[]'); } catch(e) {}
-function saveRanking() { try { localStorage.setItem('quiz_vendedor_v2', JSON.stringify(ranking)); } catch(e) {} }
 
 function getProfileResult() {
   return Object.entries(profileScores).sort((a,b) => b[1]-a[1])[0][0];
@@ -502,12 +500,14 @@ function showResult() {
   document.getElementById('result-desc').textContent = p.desc;
   document.getElementById('result-traits').innerHTML = p.traits.map(t => '<span class="trait">' + t + '</span>').join('');
 
-  const entryId = userName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-');
+  const entryId = userName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-') || 'anonimo-' + Date.now();
 
   set(ref(database, 'ranking/' + entryId), {
     name: userName,
     profileKey: key,
     updatedAt: Date.now()
+  }).catch((error) => {
+    alert('Erro ao salvar no Firebase: ' + error.message);
   });
 
   show('result');
@@ -521,7 +521,7 @@ function renderRanking() {
   const max = sorted.length ? sorted[0][1] : 1;
 
   document.getElementById('rank-total-badge').innerHTML = total > 0
-    ? '<div class="total-badge">' + total + (total === 1 ? ' pessoa respondeu' : ' pessoas responderam') + ' neste dispositivo</div>'
+    ? '<div class="total-badge">' + total + (total === 1 ? ' pessoa respondeu' : ' pessoas responderam') + ' no total</div>'
     : '';
 
   const list = document.getElementById('ranking-list');
@@ -571,6 +571,12 @@ onValue(ref(database, 'ranking'), (snapshot) => {
   const data = snapshot.val() || {};
   ranking = Object.values(data);
   renderRanking();
+}, (error) => {
+  console.error('Erro ao ler ranking:', error);
+  const list = document.getElementById('ranking-list');
+  if (list) {
+    list.innerHTML = '<div class="empty-ranking"><i class="ti ti-alert-circle"></i>Erro ao carregar o ranking.<br>Confira as regras do Realtime Database no Firebase.</div>';
+  }
 });
 
 </script>
