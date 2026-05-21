@@ -339,7 +339,7 @@ footer {
     <div id="ranking-list"></div>
     <div class="refresh-note">
       <i class="ti ti-info-circle" aria-hidden="true"></i>
-      Ranking atualizado em tempo real com as respostas de todo o time.
+      Ranking em tempo real com limpeza automática: só aparecem respostas dos últimos 10 minutos.
     </div>
     <button class="btn-secondary" id="btn-back-home" style="margin-top:1rem">← Voltar</button>
   </div>
@@ -350,7 +350,7 @@ footer {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAx0AXPZX5ZpYR9JlYAytIFulfjC8j8atM",
@@ -445,6 +445,7 @@ const PROFILES = {
 let userName = '', answers = [], currentQ = 0, profileScores = {};
 
 let ranking = [];
+const TEMPO_LIMITE_RANKING = 10 * 60 * 1000;
 
 function getProfileResult() {
   return Object.entries(profileScores).sort((a,b) => b[1]-a[1])[0][0];
@@ -505,7 +506,7 @@ function showResult() {
   set(ref(database, 'ranking/' + entryId), {
     name: userName,
     profileKey: key,
-    updatedAt: Date.now()
+    createdAt: Date.now()
   }).catch((error) => {
     alert('Erro ao salvar no Firebase: ' + error.message);
   });
@@ -521,7 +522,7 @@ function renderRanking() {
   const max = sorted.length ? sorted[0][1] : 1;
 
   document.getElementById('rank-total-badge').innerHTML = total > 0
-    ? '<div class="total-badge">' + total + (total === 1 ? ' pessoa respondeu' : ' pessoas responderam') + ' no total</div>'
+    ? '<div class="total-badge">' + total + (total === 1 ? ' pessoa respondeu' : ' pessoas responderam') + ' nos últimos 10 minutos</div>'
     : '';
 
   const list = document.getElementById('ranking-list');
@@ -569,7 +570,23 @@ document.getElementById('btn-replay').addEventListener('click', () => { profileS
 document.getElementById('btn-back-home').addEventListener('click', () => show('home'));
 onValue(ref(database, 'ranking'), (snapshot) => {
   const data = snapshot.val() || {};
-  ranking = Object.values(data);
+  const agora = Date.now();
+
+  ranking = Object.entries(data)
+    .filter(([id, item]) => {
+      const criadoEm = item.createdAt || item.updatedAt || 0;
+      const aindaVale = agora - criadoEm < TEMPO_LIMITE_RANKING;
+
+      if (!aindaVale) {
+        remove(ref(database, 'ranking/' + id)).catch((error) => {
+          console.error('Erro ao limpar resposta antiga:', error);
+        });
+      }
+
+      return aindaVale;
+    })
+    .map(([id, item]) => item);
+
   renderRanking();
 }, (error) => {
   console.error('Erro ao ler ranking:', error);
@@ -578,6 +595,13 @@ onValue(ref(database, 'ranking'), (snapshot) => {
     list.innerHTML = '<div class="empty-ranking"><i class="ti ti-alert-circle"></i>Erro ao carregar o ranking.<br>Confira as regras do Realtime Database no Firebase.</div>';
   }
 });
+
+
+setInterval(() => {
+  const agora = Date.now();
+  ranking = ranking.filter(item => agora - (item.createdAt || item.updatedAt || 0) < TEMPO_LIMITE_RANKING);
+  renderRanking();
+}, 15000);
 
 </script>
 </body>
