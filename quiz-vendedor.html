@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Qual vendedor existe dentro de você?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brand: #FF4D00;
+  --brand2: #FFB800;
+  --bg: #F5F4F0;
+  --card: #ffffff;
+  --surface: #EFEFEB;
+  --border: rgba(0,0,0,0.1);
+  --txt: #111111;
+  --txt2: #666660;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141414;
+    --card: #1E1E1E;
+    --surface: #2A2A2A;
+    --border: rgba(255,255,255,0.1);
+    --txt: #F0F0EC;
+    --txt2: #888884;
+  }
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--txt);
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 1rem 3rem;
+}
+
+#app {
+  width: 100%;
+  max-width: 480px;
+}
+
+h1, h2, .big { font-family: 'Syne', sans-serif; }
+
+.screen { display: none; animation: fadeIn 0.3s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* HOME */
+.home-header {
+  background: var(--brand);
+  padding: 2rem 1.5rem 1.75rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.home-header::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 150px; height: 150px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+}
+.home-header::after {
+  content: '';
+  position: absolute; bottom: -50px; left: 20px;
+  width: 100px; height: 100px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 50%;
+}
+.tag-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  color: #fff; font-size: 11px;
+  padding: 3px 12px; border-radius: 20px;
+  margin-bottom: 12px; letter-spacing: 0.6px;
+  position: relative;
+}
+.home-header h1 {
+  font-size: 26px; font-weight: 800;
+  color: #fff; line-height: 1.2;
+  position: relative; margin-bottom: 8px;
+}
+.home-header p {
+  color: rgba(255,255,255,0.85);
+  font-size: 14px; line-height: 1.5;
+  position: relative;
+}
+
+.name-section { padding: 0; }
+.name-section label {
+  font-size: 13px; color: var(--txt2);
+  display: block; margin-bottom: 8px;
+}
+.name-section input {
+  width: 100%; padding: 14px 16px;
+  font-size: 16px; font-family: 'DM Sans', sans-serif;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  color: var(--txt);
+  outline: none; transition: border-color 0.2s;
+}
+.name-section input::placeholder { color: var(--txt2); }
+.name-section input:focus { border-color: var(--brand); }
+
+.btn-main {
+  width: 100%; padding: 15px;
+  background: var(--brand); color: #fff;
+  border: none; border-radius: var(--radius-md);
+  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; margin-top: 1rem;
+  transition: transform 0.15s, opacity 0.15s;
+  letter-spacing: 0.3px;
+}
+.btn-main:hover { opacity: 0.92; }
+.btn-main:active { transform: scale(0.98); opacity: 0.88; }
+.btn-main:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  width: 100%; padding: 13px;
+  background: transparent; color: var(--txt2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  cursor: pointer; margin-top: 0.5rem;
+  transition: background 0.15s, color 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-secondary:hover { background: var(--surface); color: var(--txt); }
+
+/* QUIZ */
+.quiz-wrap { padding: 0; }
+.quiz-progress { display: flex; gap: 5px; margin-bottom: 2rem; }
+.prog-dot {
+  flex: 1; height: 4px; border-radius: 2px;
+  background: var(--border); transition: background 0.3s;
+}
+.prog-dot.done { background: var(--brand); }
+.prog-dot.current { background: var(--brand2); }
+
+.q-meta {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;
+}
+.q-num {
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--brand); background: rgba(255,77,0,0.1);
+  padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px;
+}
+.q-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 19px; font-weight: 700;
+  line-height: 1.35; margin-bottom: 1.5rem;
+  color: var(--txt);
+}
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt-btn {
+  width: 100%; text-align: left;
+  padding: 13px 16px;
+  background: var(--card); color: var(--txt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.4;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.opt-btn:hover { border-color: var(--brand); background: rgba(255,77,0,0.04); }
+.opt-btn.selected { border-color: var(--brand); background: rgba(255,77,0,0.08); }
+.opt-letter {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 11px; color: var(--brand);
+  min-width: 18px; margin-top: 2px;
+  background: rgba(255,77,0,0.1);
+  padding: 1px 5px; border-radius: 4px;
+}
+
+/* RESULT */
+.result-card {
+  background: var(--brand);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: center; margin-bottom: 1.25rem;
+  position: relative; overflow: hidden;
+}
+.result-card::before {
+  content: '';
+  position: absolute; top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.1); border-radius: 50%;
+}
+.result-card::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -10px;
+  width: 100px; height: 100px;
+  background: rgba(0,0,0,0.08); border-radius: 50%;
+}
+.result-emoji { font-size: 56px; margin-bottom: 0.75rem; position: relative; }
+.result-label {
+  font-size: 11px; color: rgba(255,255,255,0.75);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 6px; position: relative;
+}
+.result-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px; font-weight: 800;
+  color: #fff; line-height: 1.2; margin-bottom: 10px;
+  position: relative;
+}
+.result-desc {
+  font-size: 14px; color: rgba(255,255,255,0.9);
+  line-height: 1.6; position: relative;
+}
+.traits { display: flex; flex-wrap: wrap; gap: 7px; margin: 1.25rem 0; }
+.trait {
+  font-size: 12px; padding: 5px 12px;
+  border-radius: 20px; border: 1px solid var(--border);
+  color: var(--txt2); background: var(--surface);
+}
+
+/* RANKING */
+.ranking-header {
+  background: #111;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.ranking-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 800; color: #fff;
+  margin-bottom: 4px;
+}
+.ranking-header p { font-size: 12px; color: rgba(255,255,255,0.45); }
+.total-badge {
+  display: inline-block;
+  background: rgba(255,77,0,0.2); color: #FF6630;
+  font-size: 12px; font-weight: 500;
+  padding: 4px 12px; border-radius: 20px; margin-top: 10px;
+}
+
+.profile-bar-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  animation: slideIn 0.4s ease;
+}
+@keyframes slideIn { from { opacity:0; transform:translateX(-6px); } to { opacity:1; transform:translateX(0); } }
+.pbi-emoji { font-size: 22px; min-width: 28px; text-align: center; }
+.pbi-info { flex: 1; min-width: 0; }
+.pbi-title { font-size: 13px; font-weight: 500; color: var(--txt); margin-bottom: 5px; }
+.pbi-bar-wrap { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+.pbi-bar { height: 100%; background: var(--brand); border-radius: 3px; transition: width 0.7s cubic-bezier(.4,0,.2,1); }
+.pbi-count {
+  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800;
+  color: var(--brand); min-width: 24px; text-align: right;
+}
+.empty-ranking {
+  text-align: center; padding: 3rem 1rem;
+  color: var(--txt2); font-size: 14px; line-height: 1.6;
+}
+.empty-ranking i { font-size: 36px; display: block; margin-bottom: 10px; color: var(--border); }
+
+.refresh-note {
+  text-align: center; font-size: 12px; color: var(--txt2);
+  margin-top: 1rem; padding: 10px;
+  background: var(--surface); border-radius: var(--radius-md);
+}
+
+footer {
+  text-align: center; font-size: 11px; color: var(--txt2);
+  margin-top: 2rem; opacity: 0.5;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <div class="home-header">
+      <div class="tag-badge">quiz de integração</div>
+      <h1>Qual vendedor existe dentro de você?</h1>
+      <p>6 perguntas rápidas sobre o seu dia a dia. Um perfil que vai te definir pra sempre.</p>
+    </div>
+    <div class="name-section">
+      <label>Seu nome (só pra saber quem respondeu)</label>
+      <input type="text" id="name-input" placeholder="Ex: Maria Silva" maxlength="40" autocomplete="off" />
+      <button class="btn-main" id="btn-start" disabled>Descobrir meu perfil →</button>
+      <button class="btn-secondary" id="btn-ranking">
+        <i class="ti ti-chart-bar" aria-hidden="true"></i> Ver perfis do time
+      </button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-wrap">
+      <div class="quiz-progress" id="progress-bar"></div>
+      <div class="q-meta"><span class="q-num" id="q-num">Pergunta 1</span></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="result-card">
+      <div class="result-emoji" id="result-emoji"></div>
+      <div class="result-label">seu perfil</div>
+      <div class="result-title" id="result-title"></div>
+      <div class="result-desc" id="result-desc"></div>
+    </div>
+    <div class="traits" id="result-traits"></div>
+    <button class="btn-main" id="btn-see-ranking">Ver perfis do time →</button>
+    <button class="btn-secondary" id="btn-replay">
+      <i class="ti ti-refresh" aria-hidden="true"></i> Refazer o quiz
+    </button>
+  </div>
+
+  <!-- RANKING -->
+  <div id="screen-ranking" class="screen">
+    <div class="ranking-header">
+      <h2>Perfis do time</h2>
+      <p>Distribuição anônima — ninguém é exposto</p>
+      <div id="rank-total-badge"></div>
+    </div>
+    <div id="ranking-list"></div>
+    <div class="refresh-note">
+      <i class="ti ti-info-circle" aria-hidden="true"></i>
+      Os dados ficam salvos no dispositivo de cada pessoa. Para um ranking centralizado, hospede com banco de dados.
+    </div>
+    <button class="btn-secondary" id="btn-back-home" style="margin-top:1rem">← Voltar</button>
+  </div>
+
+</div>
+
+<footer>quiz de integração · feito com carinho ☕</footer>
+
+<script>
+const QUESTIONS = [
+  {
+    text: "Quando alguém te pede algo urgente, você...",
+    options: [
+      { letter:"A", text:"Resolve na hora, já tá feito", profiles:["fechador","caçador"] },
+      { letter:"B", text:"\"Me manda no WhatsApp\" e some", profiles:["whatsapp","fantasma"] },
+      { letter:"C", text:"Cria uma call pra alinhar", profiles:["consultivo","nutella"] },
+      { letter:"D", text:"Responde daqui 3 dias", profiles:["fantasma","anticrm"] },
+      { letter:"E", text:"Joga no grupo e esquece", profiles:["whatsapp","anticrm"] }
+    ]
+  },
+  {
+    text: "Numa reunião, você é aquele que...",
+    options: [
+      { letter:"A", text:"Já chegou com a decisão pronta", profiles:["fechador","caçador"] },
+      { letter:"B", text:"Faz perguntas pra entender tudo", profiles:["consultivo","bdr"] },
+      { letter:"C", text:"Fala 'faz sentido' pra tudo", profiles:["nutella","linkedin"] },
+      { letter:"D", text:"Compartilhou a tela errada", profiles:["anticrm","fantasma"] },
+      { letter:"E", text:"Estava falando e estava no mudo", profiles:["fantasma","whatsapp"] }
+    ]
+  },
+  {
+    text: "Seu CRM (ou agenda) está...",
+    options: [
+      { letter:"A", text:"100% atualizado em tempo real", profiles:["bdr","consultivo"] },
+      { letter:"B", text:"Tudo na memória, na cabeça", profiles:["anticrm","fechador"] },
+      { letter:"C", text:"Só atualizo quando a gestão pressiona", profiles:["anticrm","nutella"] },
+      { letter:"D", text:"O que é CRM mesmo?", profiles:["anticrm","caçador"] },
+      { letter:"E", text:"Tenho um caderninho, funciona bem", profiles:["vendedordecurso","anticrm"] }
+    ]
+  },
+  {
+    text: "Como você reagiria se perdesse um cliente importante?",
+    options: [
+      { letter:"A", text:"Já estou ligando pro próximo", profiles:["caçador","fechador"] },
+      { letter:"B", text:"Analiso o que deu errado e monto plano", profiles:["consultivo","bdr"] },
+      { letter:"C", text:"Posto uma frase motivacional no LinkedIn", profiles:["linkedin","nutella"] },
+      { letter:"D", text:"Espero ele voltar por conta própria", profiles:["fantasma","whatsapp"] },
+      { letter:"E", text:"Falo que o cliente é que não entendeu o valor", profiles:["vendedordecurso","nutella"] }
+    ]
+  },
+  {
+    text: "Qual frase sairia mais naturalmente da sua boca?",
+    options: [
+      { letter:"A", text:"\"Fechado! Pode mandar o contrato.\"", profiles:["fechador","caçador"] },
+      { letter:"B", text:"\"Deixa eu entender melhor sua necessidade...\"", profiles:["consultivo","bdr"] },
+      { letter:"C", text:"\"Vamos marcar pra conversar melhor.\"", profiles:["executivo","nutella"] },
+      { letter:"D", text:"\"Mandei no WhatsApp, não viu?\"", profiles:["whatsapp","anticrm"] },
+      { letter:"E", text:"\"Se você soubesse precificar seu valor...\"", profiles:["vendedordecurso","linkedin"] }
+    ]
+  },
+  {
+    text: "Sexta à tarde, o que você está fazendo?",
+    options: [
+      { letter:"A", text:"Fechando o último negócio do mês", profiles:["fechador","caçador"] },
+      { letter:"B", text:"Organizando pipeline e planejando semana", profiles:["consultivo","bdr"] },
+      { letter:"C", text:"Em call de 'alinhamento estratégico'", profiles:["executivo","nutella"] },
+      { letter:"D", text:"Sumido. Unreachable. Gone.", profiles:["fantasma","anticrm"] },
+      { letter:"E", text:"Postando sobre mindset no LinkedIn", profiles:["linkedin","vendedordecurso"] }
+    ]
+  }
+];
+
+const PROFILES = {
+  fechador:        { emoji:"🔒", title:"O Fechador",                desc:"Você é uma máquina. Não descansa enquanto não assinar. Meta? Mínimo.",                                             traits:["Alta pressão","Foco em resultado","Zero enrolação","Pipeline de ferro"] },
+  consultivo:      { emoji:"🧠", title:"O Consultivo",              desc:"Você entende antes de falar. O cliente sente que tem um parceiro, não um vendedor.",                              traits:["Escuta ativa","Confiança alta","Processo longo","Alta retenção"] },
+  whatsapp:        { emoji:"📱", title:"O 'Me Manda no WhatsApp'",  desc:"Toda conversa termina com essa frase. Você prefere mensagem a ligação e figurinha a feedback.",                   traits:["Comunicação informal","Ágil nas respostas","Documentação zero","Áudio longo"] },
+  linkedin:        { emoji:"💼", title:"O LinkedIn Motivacional",   desc:"Você já postou 'Orgulhoso de anunciar' pelo menos 3 vezes esse mês. A vida é uma jornada.",                       traits:["Networking master","Frases de impacto","Hashtag tudo","#Gratidão"] },
+  "caçador":       { emoji:"🎯", title:"O Caçador de Oportunidade", desc:"Você vê lead em tudo. Na padaria, no elevador, no velório do vizinho. Modo vendedor nunca desliga.",             traits:["Prospecção constante","Energia alta","Pitch em qualquer lugar","Networking selvagem"] },
+  bdr:             { emoji:"📞", title:"O BDR Raiz",                desc:"Você é o pipeline. Tudo começa em você. Ligou 80 vezes hoje? Normal. CRM atualizado? Sempre.",                    traits:["Disciplina máxima","Cold call sem medo","Cadência rígida","Processo no sangue"] },
+  fantasma:        { emoji:"👻", title:"O Cliente Fantasma",        desc:"Você sumiu em algum ponto do funil. Online às 23h, mas indisponível às 9h. Double check eterno.",                 traits:["Mestre do sumiço","Online às 23h","Lido e ignorado","Notificação silenciada"] },
+  anticrm:         { emoji:"📋", title:"O Anti CRM",                desc:"Você acha que sistemas são pra quem não tem memória. Tudo na cabeça ou no grupo do WhatsApp.",                    traits:["Memória fotográfica","Caderno sagrado","Sistema? Não preciso","Relatório improvisado"] },
+  nutella:         { emoji:"🍫", title:"O Comercial Nutella",       desc:"Reuniões impecáveis, apresentações bonitas, resultados... vem semana que vem.",                                   traits:["Apresentação linda","Processo perfeito","Entrega... depois","Fala bem, fecha pouco"] },
+  vendedordecurso: { emoji:"📚", title:"O Vendedor de Curso",       desc:"Já fez 7 cursos de vendas esse ano. Sabe todas as técnicas. Na prática? 'Ainda estou calibrando.'",              traits:["Sabe a teoria toda","Certificado em tudo","Prática em construção","Próximo curso: amanhã"] },
+  executivo:       { emoji:"📅", title:"O 'Vamos Marcar'",          desc:"Toda conversa termina com 'vamos marcar uma call'. Agenda cheia, decisão rara. A saga continua.",                 traits:["Agenda lotada","Call pra tudo","Decisão adiada","Próxima semana com certeza"] }
+};
+
+let userName = '', answers = [], currentQ = 0, profileScores = {};
+
+let ranking = [];
+try { ranking = JSON.parse(localStorage.getItem('quiz_vendedor_v2') || '[]'); } catch(e) {}
+function saveRanking() { try { localStorage.setItem('quiz_vendedor_v2', JSON.stringify(ranking)); } catch(e) {} }
+
+function getProfileResult() {
+  return Object.entries(profileScores).sort((a,b) => b[1]-a[1])[0][0];
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildProgressBar() {
+  const bar = document.getElementById('progress-bar');
+  bar.innerHTML = '';
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    const d = document.createElement('div');
+    d.className = 'prog-dot' + (i < currentQ ? ' done' : i === currentQ ? ' current' : '');
+    bar.appendChild(d);
+  }
+}
+
+function showQuestion(idx) {
+  const q = QUESTIONS[idx];
+  document.getElementById('q-num').textContent = 'Pergunta ' + (idx+1) + ' de ' + QUESTIONS.length;
+  document.getElementById('q-text').textContent = q.text;
+  buildProgressBar();
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = '<span class="opt-letter">' + opt.letter + '</span><span>' + opt.text + '</span>';
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      opt.profiles.forEach(p => { profileScores[p] = (profileScores[p] || 0) + 1; });
+      answers.push(opt.letter);
+      setTimeout(() => {
+        currentQ++;
+        if (currentQ < QUESTIONS.length) showQuestion(currentQ);
+        else showResult();
+      }, 380);
+    });
+    opts.appendChild(btn);
+  });
+}
+
+function showResult() {
+  const key = getProfileResult();
+  const p = PROFILES[key];
+  document.getElementById('result-emoji').textContent = p.emoji;
+  document.getElementById('result-title').textContent = p.title;
+  document.getElementById('result-desc').textContent = p.desc;
+  document.getElementById('result-traits').innerHTML = p.traits.map(t => '<span class="trait">' + t + '</span>').join('');
+
+  const existing = ranking.findIndex(r => r.name.toLowerCase() === userName.toLowerCase());
+  const entry = { name: userName, profileKey: key };
+  if (existing >= 0) ranking[existing] = entry; else ranking.push(entry);
+  saveRanking();
+  show('result');
+}
+
+function renderRanking() {
+  const counts = {};
+  ranking.forEach(r => { counts[r.profileKey] = (counts[r.profileKey] || 0) + 1; });
+  const total = ranking.length;
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  const max = sorted.length ? sorted[0][1] : 1;
+
+  document.getElementById('rank-total-badge').innerHTML = total > 0
+    ? '<div class="total-badge">' + total + (total === 1 ? ' pessoa respondeu' : ' pessoas responderam') + ' neste dispositivo</div>'
+    : '';
+
+  const list = document.getElementById('ranking-list');
+  if (sorted.length === 0) {
+    list.innerHTML = '<div class="empty-ranking"><i class="ti ti-chart-bar"></i>Ninguém respondeu ainda.<br>Seja o primeiro!</div>';
+    return;
+  }
+  list.innerHTML = '';
+  sorted.forEach(([key, count]) => {
+    const p = PROFILES[key];
+    if (!p) return;
+    const pct = Math.round((count / max) * 100);
+    const div = document.createElement('div');
+    div.className = 'profile-bar-item';
+    div.innerHTML =
+      '<span class="pbi-emoji">' + p.emoji + '</span>' +
+      '<div class="pbi-info">' +
+        '<div class="pbi-title">' + p.title + '</div>' +
+        '<div class="pbi-bar-wrap"><div class="pbi-bar" style="width:0%" data-pct="' + pct + '"></div></div>' +
+      '</div>' +
+      '<span class="pbi-count">' + count + '</span>';
+    list.appendChild(div);
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.pbi-bar').forEach(b => {
+      b.style.width = b.dataset.pct + '%';
+    });
+  }, 50);
+}
+
+document.getElementById('name-input').addEventListener('input', function() {
+  userName = this.value.trim();
+  document.getElementById('btn-start').disabled = userName.length < 2;
+});
+document.getElementById('name-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && userName.length >= 2) document.getElementById('btn-start').click();
+});
+document.getElementById('btn-start').addEventListener('click', () => {
+  profileScores = {}; answers = []; currentQ = 0;
+  showQuestion(0); show('quiz');
+});
+document.getElementById('btn-ranking').addEventListener('click', () => { renderRanking(); show('ranking'); });
+document.getElementById('btn-see-ranking').addEventListener('click', () => { renderRanking(); show('ranking'); });
+document.getElementById('btn-replay').addEventListener('click', () => { profileScores={}; answers=[]; currentQ=0; show('home'); });
+document.getElementById('btn-back-home').addEventListener('click', () => show('home'));
+</script>
+</body>
+</html>
