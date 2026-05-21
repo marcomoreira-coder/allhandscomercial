@@ -3,354 +3,231 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Qual vendedor existe dentro de você?</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<title>Qual é o seu perfil comercial?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --brand: #FF4D00;
-  --brand2: #FFB800;
-  --bg: #F5F4F0;
-  --card: #ffffff;
-  --surface: #EFEFEB;
-  --border: rgba(0,0,0,0.1);
-  --txt: #111111;
-  --txt2: #666660;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --bg0: #070013;
+  --bg1: #120026;
+  --bg2: #1b0738;
+  --card: rgba(25, 8, 54, 0.72);
+  --card2: rgba(36, 13, 76, 0.58);
+  --line: rgba(174, 91, 255, 0.28);
+  --line2: rgba(0, 196, 255, 0.25);
+  --txt: #ffffff;
+  --muted: #c9bde4;
+  --muted2: #9f8ac6;
+  --cyan: #17c8ff;
+  --blue: #2f64ff;
+  --purple: #a93cff;
+  --pink: #e240ff;
+  --orange: #ff9100;
+  --green: #11f5d2;
+  --red: #ff4e54;
+  --radius: 22px;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #141414;
-    --card: #1E1E1E;
-    --surface: #2A2A2A;
-    --border: rgba(255,255,255,0.1);
-    --txt: #F0F0EC;
-    --txt2: #888884;
-  }
-}
-
-html, body {
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { min-height: 100%; background: var(--bg0); }
+body {
   min-height: 100vh;
-  background: var(--bg);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Montserrat', Arial, sans-serif;
   color: var(--txt);
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem 1rem 3rem;
+  background:
+    radial-gradient(circle at 14% 10%, rgba(121, 34, 255, .30), transparent 35%),
+    radial-gradient(circle at 86% 18%, rgba(0, 196, 255, .15), transparent 28%),
+    radial-gradient(circle at 50% 100%, rgba(169, 60, 255, .22), transparent 34%),
+    linear-gradient(135deg, var(--bg0), var(--bg1) 46%, #080014);
+  overflow-x: hidden;
 }
-
-#app {
-  width: 100%;
-  max-width: 480px;
-}
-
-h1, h2, .big { font-family: 'Syne', sans-serif; }
-
-.screen { display: none; animation: fadeIn 0.3s ease; }
-.screen.active { display: block; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-/* HOME */
-.home-header {
-  background: var(--brand);
-  padding: 2rem 1.5rem 1.75rem;
-  border-radius: var(--radius-lg);
-  margin-bottom: 1.5rem;
-  position: relative;
-  overflow: hidden;
-}
-.home-header::before {
+body::before {
   content: '';
-  position: absolute; top: -40px; right: -40px;
-  width: 150px; height: 150px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 50%;
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(circle at 50% 20%, black, transparent 75%);
+  pointer-events: none;
 }
-.home-header::after {
-  content: '';
-  position: absolute; bottom: -50px; left: 20px;
-  width: 100px; height: 100px;
-  background: rgba(0,0,0,0.08);
-  border-radius: 50%;
+body::after {
+  content:'';
+  position: fixed; inset: 0;
+  background: linear-gradient(120deg, transparent 0 70%, rgba(47,100,255,.15) 70.1%, transparent 72%),
+              linear-gradient(120deg, transparent 0 78%, rgba(169,60,255,.18) 78.1%, transparent 80%);
+  pointer-events:none;
 }
-.tag-badge {
-  display: inline-block;
-  background: rgba(255,255,255,0.2);
-  color: #fff; font-size: 11px;
-  padding: 3px 12px; border-radius: 20px;
-  margin-bottom: 12px; letter-spacing: 0.6px;
-  position: relative;
+.app { width: min(1180px, calc(100% - 36px)); margin: 0 auto; padding: 42px 0 30px; position: relative; z-index: 1; }
+.logo-wrap { display:flex; justify-content:center; align-items:center; margin-bottom: 28px; }
+.logo { width: min(650px, 82vw); height: auto; display:block; filter: drop-shadow(0 0 18px rgba(255,255,255,.15)); }
+.hero { text-align:center; margin-bottom: 34px; }
+.kicker { display:flex; align-items:center; justify-content:center; gap:24px; margin-bottom:16px; }
+.stripes { display:flex; gap:8px; align-items:center; }
+.stripes span { display:block; width:28px; height:7px; border-radius:20px; transform:skewX(32deg); background: linear-gradient(90deg, var(--blue), var(--pink)); box-shadow:0 0 16px rgba(169,60,255,.55); }
+.hero h1 { font-size: clamp(22px, 3vw, 34px); letter-spacing: 3px; text-transform: uppercase; font-weight:900; color: var(--cyan); text-shadow: 0 0 18px rgba(23,200,255,.38); }
+.hero p { color: #ded6ef; font-size: clamp(15px, 2vw, 20px); line-height: 1.5; }
+.layout { display:grid; grid-template-columns: 1.05fr .55fr; gap: 18px; align-items:start; }
+.panel {
+  background: linear-gradient(145deg, rgba(35,10,74,.78), rgba(13,0,30,.84));
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 80px rgba(0,0,0,.35), inset 0 0 40px rgba(169,60,255,.06);
+  border-radius: var(--radius);
+  backdrop-filter: blur(14px);
 }
-.home-header h1 {
-  font-size: 26px; font-weight: 800;
-  color: #fff; line-height: 1.2;
-  position: relative; margin-bottom: 8px;
+.quiz-panel { padding: 34px 36px 28px; min-height: 560px; }
+.side-panel { padding: 26px 28px; min-height: 560px; }
+.screen { display:none; }
+.screen.active { display:block; animation: enter .24s ease; }
+@keyframes enter { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+.home-card { max-width: 620px; margin: 45px auto 0; text-align:center; }
+.home-card h2 { font-size: clamp(24px, 4vw, 42px); line-height:1.08; font-weight:900; margin-bottom:14px; }
+.home-card p { color:var(--muted); font-size:17px; line-height:1.65; margin-bottom: 26px; }
+.input-box { display:grid; gap:10px; text-align:left; }
+.input-box label { color:#bda6ec; font-size:13px; text-transform:uppercase; letter-spacing:1.4px; font-weight:800; }
+.input-box input { width:100%; padding:17px 18px; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid var(--line); color:#fff; outline:none; font:600 16px 'Montserrat'; }
+.input-box input:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(23,200,255,.10); }
+.actions { display:grid; gap:12px; margin-top: 16px; }
+.btn { border:none; cursor:pointer; font-family:'Montserrat'; font-weight:900; letter-spacing:.8px; border-radius:16px; transition:.18s ease; }
+.btn-main { padding: 18px 22px; color:#fff; font-size:16px; text-transform:uppercase; background: linear-gradient(100deg, #2969ff, #8a2bff 55%, #d30cff); box-shadow: 0 0 26px rgba(169,60,255,.35); }
+.btn-main:hover { transform: translateY(-1px); box-shadow: 0 0 36px rgba(23,200,255,.22), 0 0 34px rgba(169,60,255,.32); }
+.btn-main:disabled { opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-ghost { padding:15px 18px; color:#d8cff0; background:rgba(255,255,255,.04); border:1px solid var(--line); }
+.btn-ghost:hover { border-color:var(--cyan); color:#fff; }
+.q-top { display:flex; justify-content:center; color:#b377ff; font-weight:900; letter-spacing:1px; text-transform:uppercase; margin-bottom:22px; font-size:18px; }
+.progress { height: 13px; border-radius: 999px; background: rgba(108, 50, 175, .55); border:1px solid rgba(255,255,255,.05); overflow:hidden; margin: 0 auto 34px; max-width: 590px; }
+.progress span { display:block; height:100%; width:0%; border-radius:999px; background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple)); box-shadow: 0 0 20px rgba(23,200,255,.6); transition: width .3s ease; }
+.question { font-size: clamp(22px, 3vw, 30px); line-height:1.28; font-weight:900; margin-bottom:24px; }
+.options { display:grid; gap:14px; }
+.opt { display:grid; grid-template-columns:56px 42px 1fr; align-items:center; gap:16px; width:100%; text-align:left; padding:16px 18px; min-height:82px; border-radius:16px; border:1px solid rgba(174,91,255,.42); background: linear-gradient(120deg, rgba(50,13,105,.70), rgba(15,0,34,.62)); color:#fff; cursor:pointer; font:600 18px 'Montserrat'; transition:.16s ease; }
+.opt:hover { transform:translateX(4px); border-color:var(--cyan); box-shadow:0 0 24px rgba(23,200,255,.12); }
+.opt-letter { width:52px; height:52px; display:grid; place-items:center; border-radius:13px; background: linear-gradient(145deg, #7d32ff, #40127e); border:1px solid rgba(255,255,255,.12); font-size:22px; font-weight:900; }
+.opt i { font-size:34px; color: var(--cyan); text-shadow:0 0 14px rgba(23,200,255,.45); }
+.opt:nth-child(1) i { color:#a43cff; } .opt:nth-child(2) i { color:#16c7ff; } .opt:nth-child(3) i { color:#ff49d7; } .opt:nth-child(4) i { color:#13e4ff; } .opt:nth-child(5) i { color:#ff9800; }
+.note { display:flex; gap:10px; justify-content:center; align-items:center; color:#b7a3df; font-size:15px; margin-top:21px; }
+.result-card { text-align:center; padding: 34px 22px; }
+.result-icon { width:94px; height:94px; display:grid; place-items:center; margin:0 auto 18px; border-radius:50%; background:rgba(169,60,255,.12); border:1px solid rgba(169,60,255,.55); box-shadow: 0 0 34px rgba(169,60,255,.22); }
+.result-icon i { font-size:54px; color:var(--cyan); }
+.result-label { color:#b377ff; text-transform:uppercase; letter-spacing:1.5px; font-size:13px; font-weight:900; margin-bottom:8px; }
+.result-title { font-size: clamp(30px, 5vw, 48px); font-weight:900; line-height:1.05; margin-bottom:14px; }
+.result-desc { color:#ded6ef; line-height:1.7; font-size:18px; max-width:620px; margin:0 auto 24px; }
+.traits { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:24px; }
+.trait { padding:9px 14px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid var(--line); color:#d9cef0; font-weight:700; font-size:13px; }
+.rank-head { display:grid; grid-template-columns:70px 1fr; gap:16px; align-items:center; margin-bottom:22px; }
+.rank-icon { width:70px; height:70px; display:grid; place-items:center; border-radius:50%; background:rgba(169,60,255,.13); border:1px solid rgba(169,60,255,.7); box-shadow: 0 0 30px rgba(169,60,255,.24); }
+.rank-icon i { font-size:42px; color:#b15cff; }
+.rank-head h2 { font-size:24px; text-transform:uppercase; letter-spacing:1px; font-weight:900; }
+.rank-head p { color:var(--cyan); font-size:16px; margin-top:5px; font-weight:600; }
+.rank-list { display:grid; gap:0; border-top:1px solid rgba(255,255,255,.10); }
+.rank-row { display:grid; grid-template-columns:46px 1fr 44px; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid rgba(255,255,255,.10); }
+.pos { width:34px; height:34px; border-radius:9px; display:grid; place-items:center; font-weight:900; background:linear-gradient(145deg, #6420c9, #310e70); border:1px solid rgba(255,255,255,.12); }
+.rank-row:nth-child(1) .pos { background:linear-gradient(145deg,#ffe600,#af7400); color:#fff; }
+.rank-row:nth-child(2) .pos { background:linear-gradient(145deg,#dbe8ff,#5d6a7a); }
+.rank-row:nth-child(3) .pos { background:linear-gradient(145deg,#ffb07b,#b74c24); }
+.r-title { font-size:17px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.r-count { text-align:right; font-size:18px; font-weight:800; }
+.empty { padding:38px 10px; text-align:center; color:var(--muted); line-height:1.6; }
+.live-note { display:flex; gap:12px; align-items:flex-start; margin-top:22px; color:#bfaee3; font-size:14px; line-height:1.5; }
+.live-note i { color:#b15cff; font-size:30px; }
+.profiles-section { margin-top:30px; }
+.section-title { display:flex; align-items:center; justify-content:center; gap:16px; color:#b377ff; text-transform:uppercase; letter-spacing:1.8px; font-weight:900; margin-bottom:16px; }
+.section-title::before, .section-title::after { content:''; width:90px; height:1px; background:linear-gradient(90deg, transparent, rgba(174,91,255,.8), transparent); }
+.profile-grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:16px; }
+.profile-card { padding:22px 14px 20px; min-height:190px; text-align:center; border-radius:18px; border:1px solid var(--line); background:linear-gradient(145deg, rgba(35,10,74,.7), rgba(13,0,30,.72)); box-shadow: inset 0 0 30px rgba(169,60,255,.04); }
+.profile-card i { font-size:54px; margin-bottom:14px; display:block; color:var(--cyan); }
+.profile-card h3 { font-size:16px; text-transform:uppercase; letter-spacing:.6px; font-weight:900; margin-bottom:10px; }
+.profile-card p { color:#d8cff0; font-size:14px; line-height:1.45; }
+.footer { text-align:center; margin-top:36px; color:#c5b8df; font-size:14px; }
+.footer strong { color:var(--cyan); }
+@media (max-width: 920px) {
+  .layout { grid-template-columns:1fr; }
+  .side-panel { min-height:auto; }
+  .profile-grid { grid-template-columns: repeat(2, 1fr); }
+  .quiz-panel { padding:26px 20px; min-height:auto; }
+  .opt { grid-template-columns:46px 34px 1fr; font-size:15px; min-height:70px; padding:12px; }
+  .opt-letter { width:44px; height:44px; font-size:18px; }
+  .opt i { font-size:28px; }
+  .kicker { gap:10px; }
+  .stripes span { width:18px; height:5px; }
 }
-.home-header p {
-  color: rgba(255,255,255,0.85);
-  font-size: 14px; line-height: 1.5;
-  position: relative;
-}
-
-.name-section { padding: 0; }
-.name-section label {
-  font-size: 13px; color: var(--txt2);
-  display: block; margin-bottom: 8px;
-}
-.name-section input {
-  width: 100%; padding: 14px 16px;
-  font-size: 16px; font-family: 'DM Sans', sans-serif;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--card);
-  color: var(--txt);
-  outline: none; transition: border-color 0.2s;
-}
-.name-section input::placeholder { color: var(--txt2); }
-.name-section input:focus { border-color: var(--brand); }
-
-.btn-main {
-  width: 100%; padding: 15px;
-  background: var(--brand); color: #fff;
-  border: none; border-radius: var(--radius-md);
-  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
-  cursor: pointer; margin-top: 1rem;
-  transition: transform 0.15s, opacity 0.15s;
-  letter-spacing: 0.3px;
-}
-.btn-main:hover { opacity: 0.92; }
-.btn-main:active { transform: scale(0.98); opacity: 0.88; }
-.btn-main:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
-
-.btn-secondary {
-  width: 100%; padding: 13px;
-  background: transparent; color: var(--txt2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  font-family: 'DM Sans', sans-serif; font-size: 14px;
-  cursor: pointer; margin-top: 0.5rem;
-  transition: background 0.15s, color 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.btn-secondary:hover { background: var(--surface); color: var(--txt); }
-
-/* QUIZ */
-.quiz-wrap { padding: 0; }
-.quiz-progress { display: flex; gap: 5px; margin-bottom: 2rem; }
-.prog-dot {
-  flex: 1; height: 4px; border-radius: 2px;
-  background: var(--border); transition: background 0.3s;
-}
-.prog-dot.done { background: var(--brand); }
-.prog-dot.current { background: var(--brand2); }
-
-.q-meta {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;
-}
-.q-num {
-  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
-  color: var(--brand); background: rgba(255,77,0,0.1);
-  padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px;
-}
-.q-text {
-  font-family: 'Syne', sans-serif;
-  font-size: 19px; font-weight: 700;
-  line-height: 1.35; margin-bottom: 1.5rem;
-  color: var(--txt);
-}
-.options { display: flex; flex-direction: column; gap: 8px; }
-.opt-btn {
-  width: 100%; text-align: left;
-  padding: 13px 16px;
-  background: var(--card); color: var(--txt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.4;
-  cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: flex-start; gap: 10px;
-}
-.opt-btn:hover { border-color: var(--brand); background: rgba(255,77,0,0.04); }
-.opt-btn.selected { border-color: var(--brand); background: rgba(255,77,0,0.08); }
-.opt-letter {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 11px; color: var(--brand);
-  min-width: 18px; margin-top: 2px;
-  background: rgba(255,77,0,0.1);
-  padding: 1px 5px; border-radius: 4px;
-}
-
-/* RESULT */
-.result-card {
-  background: var(--brand);
-  border-radius: var(--radius-lg);
-  padding: 2rem 1.5rem;
-  text-align: center; margin-bottom: 1.25rem;
-  position: relative; overflow: hidden;
-}
-.result-card::before {
-  content: '';
-  position: absolute; top: -30px; right: -30px;
-  width: 120px; height: 120px;
-  background: rgba(255,255,255,0.1); border-radius: 50%;
-}
-.result-card::after {
-  content: '';
-  position: absolute; bottom: -40px; left: -10px;
-  width: 100px; height: 100px;
-  background: rgba(0,0,0,0.08); border-radius: 50%;
-}
-.result-emoji { font-size: 56px; margin-bottom: 0.75rem; position: relative; }
-.result-label {
-  font-size: 11px; color: rgba(255,255,255,0.75);
-  letter-spacing: 1.5px; text-transform: uppercase;
-  margin-bottom: 6px; position: relative;
-}
-.result-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 26px; font-weight: 800;
-  color: #fff; line-height: 1.2; margin-bottom: 10px;
-  position: relative;
-}
-.result-desc {
-  font-size: 14px; color: rgba(255,255,255,0.9);
-  line-height: 1.6; position: relative;
-}
-.traits { display: flex; flex-wrap: wrap; gap: 7px; margin: 1.25rem 0; }
-.trait {
-  font-size: 12px; padding: 5px 12px;
-  border-radius: 20px; border: 1px solid var(--border);
-  color: var(--txt2); background: var(--surface);
-}
-
-/* RANKING */
-.ranking-header {
-  background: #111;
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-.ranking-header h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px; font-weight: 800; color: #fff;
-  margin-bottom: 4px;
-}
-.ranking-header p { font-size: 12px; color: rgba(255,255,255,0.45); }
-.total-badge {
-  display: inline-block;
-  background: rgba(255,77,0,0.2); color: #FF6630;
-  font-size: 12px; font-weight: 500;
-  padding: 4px 12px; border-radius: 20px; margin-top: 10px;
-}
-
-.profile-bar-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  margin-bottom: 8px;
-  animation: slideIn 0.4s ease;
-}
-@keyframes slideIn { from { opacity:0; transform:translateX(-6px); } to { opacity:1; transform:translateX(0); } }
-.pbi-emoji { font-size: 22px; min-width: 28px; text-align: center; }
-.pbi-info { flex: 1; min-width: 0; }
-.pbi-title { font-size: 13px; font-weight: 500; color: var(--txt); margin-bottom: 5px; }
-.pbi-bar-wrap { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; }
-.pbi-bar { height: 100%; background: var(--brand); border-radius: 3px; transition: width 0.7s cubic-bezier(.4,0,.2,1); }
-.pbi-count {
-  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800;
-  color: var(--brand); min-width: 24px; text-align: right;
-}
-.empty-ranking {
-  text-align: center; padding: 3rem 1rem;
-  color: var(--txt2); font-size: 14px; line-height: 1.6;
-}
-.empty-ranking i { font-size: 36px; display: block; margin-bottom: 10px; color: var(--border); }
-
-.refresh-note {
-  text-align: center; font-size: 12px; color: var(--txt2);
-  margin-top: 1rem; padding: 10px;
-  background: var(--surface); border-radius: var(--radius-md);
-}
-
-footer {
-  text-align: center; font-size: 11px; color: var(--txt2);
-  margin-top: 2rem; opacity: 0.5;
+@media (max-width: 520px) {
+  .app { width: min(100% - 24px, 1180px); padding-top:24px; }
+  .profile-grid { grid-template-columns:1fr; }
+  .hero h1 { letter-spacing:1.4px; }
+  .section-title::before, .section-title::after { width:28px; }
 }
 </style>
 </head>
 <body>
-<div id="app">
+<main class="app">
+  <div class="logo-wrap"><img class="logo" src="data:image/png;base64,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" alt="Grupo Escalar"></div>
+  <section class="hero">
+    <div class="kicker"><div class="stripes"><span></span><span></span><span></span></div><h1>Qual é o seu perfil comercial?</h1><div class="stripes"><span></span><span></span><span></span></div></div>
+    <p>Responda e descubra seu perfil. O ranking é em tempo real.</p>
+  </section>
 
-  <!-- HOME -->
-  <div id="screen-home" class="screen active">
-    <div class="home-header">
-      <div class="tag-badge">quiz de integração</div>
-      <h1>Qual vendedor existe dentro de você?</h1>
-      <p>6 perguntas rápidas sobre o seu dia a dia. Um perfil que vai te definir pra sempre.</p>
-    </div>
-    <div class="name-section">
-      <label>Seu nome (só pra saber quem respondeu)</label>
-      <input type="text" id="name-input" placeholder="Ex: Maria Silva" maxlength="40" autocomplete="off" />
-      <button class="btn-main" id="btn-start" disabled>Descobrir meu perfil →</button>
-      <button class="btn-secondary" id="btn-ranking">
-        <i class="ti ti-chart-bar" aria-hidden="true"></i> Ver perfis do time
-      </button>
-    </div>
-  </div>
+  <section class="layout">
+    <div class="panel quiz-panel">
+      <section id="screen-home" class="screen active">
+        <div class="home-card">
+          <h2>Descubra o vendedor que existe dentro de você</h2>
+          <p>São 8 perguntas rápidas. O resultado é individual, mas o ranking mostra só a distribuição dos perfis do time.</p>
+          <div class="input-box">
+            <label for="name-input">Seu nome</label>
+            <input id="name-input" autocomplete="off" maxlength="40" placeholder="Ex: Marco Moreira">
+          </div>
+          <div class="actions">
+            <button class="btn btn-main" id="btn-start" disabled>Começar teste</button>
+            <button class="btn btn-ghost" id="btn-ranking">Ver ranking ao vivo</button>
+          </div>
+        </div>
+      </section>
 
-  <!-- QUIZ -->
-  <div id="screen-quiz" class="screen">
-    <div class="quiz-wrap">
-      <div class="quiz-progress" id="progress-bar"></div>
-      <div class="q-meta"><span class="q-num" id="q-num">Pergunta 1</span></div>
-      <div class="q-text" id="q-text"></div>
-      <div class="options" id="options"></div>
-    </div>
-  </div>
+      <section id="screen-quiz" class="screen">
+        <div class="q-top" id="q-num">Pergunta 1 de 8</div>
+        <div class="progress"><span id="progress-fill"></span></div>
+        <h2 class="question" id="q-text"></h2>
+        <div class="options" id="options"></div>
+        <div class="note"><i class="ti ti-shield-check"></i> Seus dados não são identificados no ranking. Participe com confiança.</div>
+      </section>
 
-  <!-- RESULT -->
-  <div id="screen-result" class="screen">
-    <div class="result-card">
-      <div class="result-emoji" id="result-emoji"></div>
-      <div class="result-label">seu perfil</div>
-      <div class="result-title" id="result-title"></div>
-      <div class="result-desc" id="result-desc"></div>
+      <section id="screen-result" class="screen">
+        <div class="result-card">
+          <div class="result-icon"><i id="result-icon" class="ti"></i></div>
+          <div class="result-label">seu perfil</div>
+          <h2 class="result-title" id="result-title"></h2>
+          <p class="result-desc" id="result-desc"></p>
+          <div class="traits" id="result-traits"></div>
+          <div class="actions">
+            <button class="btn btn-main" id="btn-see-ranking">Ver ranking ao vivo</button>
+            <button class="btn btn-ghost" id="btn-replay">Refazer teste</button>
+          </div>
+        </div>
+      </section>
     </div>
-    <div class="traits" id="result-traits"></div>
-    <button class="btn-main" id="btn-see-ranking">Ver perfis do time →</button>
-    <button class="btn-secondary" id="btn-replay">
-      <i class="ti ti-refresh" aria-hidden="true"></i> Refazer o quiz
-    </button>
-  </div>
 
-  <!-- RANKING -->
-  <div id="screen-ranking" class="screen">
-    <div class="ranking-header">
-      <h2>Perfis do time</h2>
-      <p>Distribuição anônima — ninguém é exposto</p>
-      <div id="rank-total-badge"></div>
-    </div>
-    <div id="ranking-list"></div>
-    <div class="refresh-note">
-      <i class="ti ti-info-circle" aria-hidden="true"></i>
-      Ranking em tempo real com limpeza automática: só aparecem respostas dos últimos 10 minutos.
-    </div>
-    <button class="btn-secondary" id="btn-back-home" style="margin-top:1rem">← Voltar</button>
-  </div>
+    <aside class="panel side-panel">
+      <div class="rank-head">
+        <div class="rank-icon"><i class="ti ti-trophy"></i></div>
+        <div><h2>Ranking ao vivo</h2><p>Últimos 3 minutos</p></div>
+      </div>
+      <div class="rank-list" id="ranking-list"></div>
+      <div class="live-note"><i class="ti ti-clock-hour-3"></i><span>O ranking atualiza em tempo real e zera automaticamente a cada <strong>3 minutos</strong>.</span></div>
+    </aside>
+  </section>
 
-</div>
+  <section class="profiles-section">
+    <div class="section-title">Conheça os perfis</div>
+    <div class="profile-grid" id="profile-grid"></div>
+  </section>
 
-<footer>quiz de integração · feito com carinho ☕</footer>
+  <div class="footer"><strong>Grupo Escalar</strong> © 2026 | All Hands</div>
+</main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAx0AXPZX5ZpYR9JlYAytIFulfjC8j8atM",
@@ -364,91 +241,117 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+const EXPIRATION_MS = 3 * 60 * 1000;
+const rankingRef = ref(database, 'ranking');
 
 const QUESTIONS = [
   {
-    text: "Quando alguém te pede algo urgente, você...",
+    text: "Numa call com cliente, você costuma...",
     options: [
-      { letter:"A", text:"Resolve na hora, já tá feito", profiles:["fechador","caçador"] },
-      { letter:"B", text:"\"Me manda no WhatsApp\" e some", profiles:["whatsapp","fantasma"] },
-      { letter:"C", text:"Cria uma call pra alinhar", profiles:["consultivo","nutella"] },
-      { letter:"D", text:"Responde daqui 3 dias", profiles:["fantasma","anticrm"] },
-      { letter:"E", text:"Joga no grupo e esquece", profiles:["whatsapp","anticrm"] }
+      { letter:"A", icon:"ti-bolt", text:"Improvisar no feeling e deixar fluir", profiles:["improvisador","caçador"] },
+      { letter:"B", icon:"ti-clipboard-list", text:"Seguir o roteiro à risca", profiles:["roteirista","consultivo"] },
+      { letter:"C", icon:"ti-message-circle", text:"Falar mais do que ouvir", profiles:["reativo","enrolado"] },
+      { letter:"D", icon:"ti-user", text:"Deixar o cliente falar sozinho", profiles:["consultivo","overthinker"] },
+      { letter:"E", icon:"ti-browser", text:"Abrir 18 abas e se perder", profiles:["disperso","enrolado"] }
     ]
   },
   {
-    text: "Numa reunião, você é aquele que...",
+    text: "Quando chega um lead novo, você...",
     options: [
-      { letter:"A", text:"Já chegou com a decisão pronta", profiles:["fechador","caçador"] },
-      { letter:"B", text:"Faz perguntas pra entender tudo", profiles:["consultivo","bdr"] },
-      { letter:"C", text:"Fala 'faz sentido' pra tudo", profiles:["nutella","linkedin"] },
-      { letter:"D", text:"Compartilhou a tela errada", profiles:["anticrm","fantasma"] },
-      { letter:"E", text:"Estava falando e estava no mudo", profiles:["fantasma","whatsapp"] }
+      { letter:"A", icon:"ti-phone-call", text:"Liga na hora antes que esfrie", profiles:["caçador","reativo"] },
+      { letter:"B", icon:"ti-search", text:"Pesquisa a empresa inteira antes", profiles:["consultivo","overthinker"] },
+      { letter:"C", icon:"ti-brand-whatsapp", text:"Manda mensagem e espera o timing", profiles:["enrolado","disperso"] },
+      { letter:"D", icon:"ti-users", text:"Pergunta quem conhece alguém lá", profiles:["caçador","consultivo"] },
+      { letter:"E", icon:"ti-clock", text:"Responde depois, quando der", profiles:["sumido","reativo"] }
     ]
   },
   {
-    text: "Seu CRM (ou agenda) está...",
+    text: "Seu jeito de lidar com tarefa urgente é...",
     options: [
-      { letter:"A", text:"100% atualizado em tempo real", profiles:["bdr","consultivo"] },
-      { letter:"B", text:"Tudo na memória, na cabeça", profiles:["anticrm","fechador"] },
-      { letter:"C", text:"Só atualizo quando a gestão pressiona", profiles:["anticrm","nutella"] },
-      { letter:"D", text:"O que é CRM mesmo?", profiles:["anticrm","caçador"] },
-      { letter:"E", text:"Tenho um caderninho, funciona bem", profiles:["vendedordecurso","anticrm"] }
+      { letter:"A", icon:"ti-flame", text:"Resolver no impulso e ajustar depois", profiles:["improvisador","reativo"] },
+      { letter:"B", icon:"ti-list-check", text:"Criar prioridade, prazo e responsável", profiles:["roteirista","consultivo"] },
+      { letter:"C", icon:"ti-arrow-right", text:"Empurrar pra quem entende mais", profiles:["empurrador","sumido"] },
+      { letter:"D", icon:"ti-hourglass", text:"Deixar maturar para não errar", profiles:["overthinker","enrolado"] },
+      { letter:"E", icon:"ti-messages", text:"Abrir um grupo para alinhar", profiles:["disperso","empurrador"] }
     ]
   },
   {
-    text: "Como você reagiria se perdesse um cliente importante?",
+    text: "Depois de uma reunião importante, você...",
     options: [
-      { letter:"A", text:"Já estou ligando pro próximo", profiles:["caçador","fechador"] },
-      { letter:"B", text:"Analiso o que deu errado e monto plano", profiles:["consultivo","bdr"] },
-      { letter:"C", text:"Posto uma frase motivacional no LinkedIn", profiles:["linkedin","nutella"] },
-      { letter:"D", text:"Espero ele voltar por conta própria", profiles:["fantasma","whatsapp"] },
-      { letter:"E", text:"Falo que o cliente é que não entendeu o valor", profiles:["vendedordecurso","nutella"] }
+      { letter:"A", icon:"ti-send", text:"Já manda próximo passo e data", profiles:["caçador","roteirista"] },
+      { letter:"B", icon:"ti-notes", text:"Escreve um resumo cheio de contexto", profiles:["consultivo","overthinker"] },
+      { letter:"C", icon:"ti-mood-smile", text:"Sente que foi bem e segue a vida", profiles:["improvisador","disperso"] },
+      { letter:"D", icon:"ti-ghost", text:"Some até alguém cobrar retorno", profiles:["sumido","enrolado"] },
+      { letter:"E", icon:"ti-repeat", text:"Marca outra call para alinhar melhor", profiles:["enrolado","overthinker"] }
     ]
   },
   {
-    text: "Qual frase sairia mais naturalmente da sua boca?",
+    text: "Seu maior inimigo no dia a dia é...",
     options: [
-      { letter:"A", text:"\"Fechado! Pode mandar o contrato.\"", profiles:["fechador","caçador"] },
-      { letter:"B", text:"\"Deixa eu entender melhor sua necessidade...\"", profiles:["consultivo","bdr"] },
-      { letter:"C", text:"\"Vamos marcar pra conversar melhor.\"", profiles:["executivo","nutella"] },
-      { letter:"D", text:"\"Mandei no WhatsApp, não viu?\"", profiles:["whatsapp","anticrm"] },
-      { letter:"E", text:"\"Se você soubesse precificar seu valor...\"", profiles:["vendedordecurso","linkedin"] }
+      { letter:"A", icon:"ti-database", text:"CRM, planilha e sistema demais", profiles:["improvisador","reativo"] },
+      { letter:"B", icon:"ti-bell-ringing", text:"Follow up esquecido", profiles:["sumido","disperso"] },
+      { letter:"C", icon:"ti-calendar-event", text:"Reunião sem fim", profiles:["caçador","reativo"] },
+      { letter:"D", icon:"ti-brain", text:"Pensar demais e travar", profiles:["overthinker","consultivo"] },
+      { letter:"E", icon:"ti-route", text:"Não saber exatamente por onde começar", profiles:["disperso","empurrador"] }
     ]
   },
   {
-    text: "Sexta à tarde, o que você está fazendo?",
+    text: "Quando alguém te cobra uma entrega, você responde...",
     options: [
-      { letter:"A", text:"Fechando o último negócio do mês", profiles:["fechador","caçador"] },
-      { letter:"B", text:"Organizando pipeline e planejando semana", profiles:["consultivo","bdr"] },
-      { letter:"C", text:"Em call de 'alinhamento estratégico'", profiles:["executivo","nutella"] },
-      { letter:"D", text:"Sumido. Unreachable. Gone.", profiles:["fantasma","anticrm"] },
-      { letter:"E", text:"Postando sobre mindset no LinkedIn", profiles:["linkedin","vendedordecurso"] }
+      { letter:"A", icon:"ti-check", text:"Já está pronto, vou te mandar", profiles:["roteirista","caçador"] },
+      { letter:"B", icon:"ti-tool", text:"Estou refinando para ficar melhor", profiles:["overthinker","consultivo"] },
+      { letter:"C", icon:"ti-alert-circle", text:"Estou vendo isso agora", profiles:["reativo","enrolado"] },
+      { letter:"D", icon:"ti-arrows-split", text:"Acho que isso está com outra pessoa", profiles:["empurrador","sumido"] },
+      { letter:"E", icon:"ti-confetti", text:"Boa! Faz sentido. Vou olhar", profiles:["disperso","enrolado"] }
+    ]
+  },
+  {
+    text: "Se o plano começa a dar errado, você...",
+    options: [
+      { letter:"A", icon:"ti-target-arrow", text:"Muda a rota e tenta outro caminho", profiles:["caçador","improvisador"] },
+      { letter:"B", icon:"ti-chart-dots", text:"Analisa o dado antes de mexer", profiles:["consultivo","overthinker"] },
+      { letter:"C", icon:"ti-mood-wrrr", text:"Fica esperando estabilizar", profiles:["sumido","enrolado"] },
+      { letter:"D", icon:"ti-phone-outgoing", text:"Liga para alguém destravar rápido", profiles:["reativo","caçador"] },
+      { letter:"E", icon:"ti-share-3", text:"Passa a bola para quem tem mais contexto", profiles:["empurrador","disperso"] }
+    ]
+  },
+  {
+    text: "Na sexta à tarde, você está...",
+    options: [
+      { letter:"A", icon:"ti-lock-check", text:"Tentando fechar a última pendência", profiles:["caçador","roteirista"] },
+      { letter:"B", icon:"ti-calendar-stats", text:"Organizando a próxima semana", profiles:["consultivo","roteirista"] },
+      { letter:"C", icon:"ti-coffee", text:"Prometendo resolver segunda cedo", profiles:["enrolado","sumido"] },
+      { letter:"D", icon:"ti-device-laptop", text:"Com mil abas abertas e nenhuma finalizada", profiles:["disperso","overthinker"] },
+      { letter:"E", icon:"ti-bell", text:"Aparecendo só quando chamam", profiles:["reativo","empurrador"] }
     ]
   }
 ];
 
 const PROFILES = {
-  fechador:        { emoji:"🔒", title:"O Fechador",                desc:"Você é uma máquina. Não descansa enquanto não assinar. Meta? Mínimo.",                                             traits:["Alta pressão","Foco em resultado","Zero enrolação","Pipeline de ferro"] },
-  consultivo:      { emoji:"🧠", title:"O Consultivo",              desc:"Você entende antes de falar. O cliente sente que tem um parceiro, não um vendedor.",                              traits:["Escuta ativa","Confiança alta","Processo longo","Alta retenção"] },
-  whatsapp:        { emoji:"📱", title:"O 'Me Manda no WhatsApp'",  desc:"Toda conversa termina com essa frase. Você prefere mensagem a ligação e figurinha a feedback.",                   traits:["Comunicação informal","Ágil nas respostas","Documentação zero","Áudio longo"] },
-  linkedin:        { emoji:"💼", title:"O LinkedIn Motivacional",   desc:"Você já postou 'Orgulhoso de anunciar' pelo menos 3 vezes esse mês. A vida é uma jornada.",                       traits:["Networking master","Frases de impacto","Hashtag tudo","#Gratidão"] },
-  "caçador":       { emoji:"🎯", title:"O Caçador de Oportunidade", desc:"Você vê lead em tudo. Na padaria, no elevador, no velório do vizinho. Modo vendedor nunca desliga.",             traits:["Prospecção constante","Energia alta","Pitch em qualquer lugar","Networking selvagem"] },
-  bdr:             { emoji:"📞", title:"O BDR Raiz",                desc:"Você é o pipeline. Tudo começa em você. Ligou 80 vezes hoje? Normal. CRM atualizado? Sempre.",                    traits:["Disciplina máxima","Cold call sem medo","Cadência rígida","Processo no sangue"] },
-  fantasma:        { emoji:"👻", title:"O Cliente Fantasma",        desc:"Você sumiu em algum ponto do funil. Online às 23h, mas indisponível às 9h. Double check eterno.",                 traits:["Mestre do sumiço","Online às 23h","Lido e ignorado","Notificação silenciada"] },
-  anticrm:         { emoji:"📋", title:"O Anti CRM",                desc:"Você acha que sistemas são pra quem não tem memória. Tudo na cabeça ou no grupo do WhatsApp.",                    traits:["Memória fotográfica","Caderno sagrado","Sistema? Não preciso","Relatório improvisado"] },
-  nutella:         { emoji:"🍫", title:"O Comercial Nutella",       desc:"Reuniões impecáveis, apresentações bonitas, resultados... vem semana que vem.",                                   traits:["Apresentação linda","Processo perfeito","Entrega... depois","Fala bem, fecha pouco"] },
-  vendedordecurso: { emoji:"📚", title:"O Vendedor de Curso",       desc:"Já fez 7 cursos de vendas esse ano. Sabe todas as técnicas. Na prática? 'Ainda estou calibrando.'",              traits:["Sabe a teoria toda","Certificado em tudo","Prática em construção","Próximo curso: amanhã"] },
-  executivo:       { emoji:"📅", title:"O 'Vamos Marcar'",          desc:"Toda conversa termina com 'vamos marcar uma call'. Agenda cheia, decisão rara. A saga continua.",                 traits:["Agenda lotada","Call pra tudo","Decisão adiada","Próxima semana com certeza"] }
+  consultivo: { icon:"ti-target-arrow", title:"Consultivo", desc:"Analítico, estratégico e focado em entender antes de propor.", traits:["Escuta ativa","Contexto","Estratégia"], color:"#a43cff" },
+  "caçador": { icon:"ti-crosshair", title:"Caçador", desc:"Focado em resultado, objetivo e movido por desafio.", traits:["Energia","Ação","Resultado"], color:"#ff9800" },
+  improvisador: { icon:"ti-bulb", title:"Improvisador", desc:"Criativo, espontâneo e bom para resolver no calor do jogo.", traits:["Criatividade","Agilidade","Jogo rápido"], color:"#ff49d7" },
+  roteirista: { icon:"ti-clipboard-list", title:"Roteirista", desc:"Organizado, disciplinado e metódico ao extremo.", traits:["Processo","Ritmo","Controle"], color:"#16c7ff" },
+  sumido: { icon:"ti-ghost-2", title:"Sumido", desc:"Some, some e aparece quando menos esperam.", traits:["Silêncio","Mistério","Timing próprio"], color:"#11f5d2" },
+  enrolado: { icon:"ti-hourglass", title:"Enrolado", desc:"Deixa tudo para depois e vive em câmera lenta.", traits:["Adia","Promete","Vai ver"], color:"#ffe600" },
+  overthinker: { icon:"ti-brain", title:"Overthinker", desc:"Pensa demais, analisa demais e às vezes trava.", traits:["Análise","Cuidado","Detalhe"], color:"#9dff2e" },
+  disperso: { icon:"ti-devices", title:"Disperso", desc:"Múltiplas abas abertas, foco zero e muita coisa acontecendo.", traits:["Abas abertas","Ideias mil","Foco variável"], color:"#17c8ff" },
+  empurrador: { icon:"ti-arrow-forward-up", title:"Empurrador", desc:"Joga para o outro e transfere a responsabilidade com classe.", traits:["Delegação criativa","Passe refinado","Contexto parcial"], color:"#ff4e54" },
+  reativo: { icon:"ti-bell-ringing", title:"Reativo", desc:"Só age quando é chamado. Às vezes nem aí.", traits:["Resposta rápida","Sob demanda","Última hora"], color:"#a43cff" }
 };
 
-let userName = '', answers = [], currentQ = 0, profileScores = {};
-
+let userName = '';
+let currentQ = 0;
+let profileScores = {};
 let ranking = [];
-const TEMPO_LIMITE_RANKING = 10 * 60 * 1000;
 
-function getProfileResult() {
-  return Object.entries(profileScores).sort((a,b) => b[1]-a[1])[0][0];
+function getSessionId() {
+  let id = localStorage.getItem('escalar_quiz_session_id');
+  if (!id) {
+    id = 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    localStorage.setItem('escalar_quiz_session_id', id);
+  }
+  return id;
 }
 
 function show(id) {
@@ -457,100 +360,87 @@ function show(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function buildProgressBar() {
-  const bar = document.getElementById('progress-bar');
-  bar.innerHTML = '';
-  for (let i = 0; i < QUESTIONS.length; i++) {
-    const d = document.createElement('div');
-    d.className = 'prog-dot' + (i < currentQ ? ' done' : i === currentQ ? ' current' : '');
-    bar.appendChild(d);
-  }
-}
-
-function showQuestion(idx) {
-  const q = QUESTIONS[idx];
-  document.getElementById('q-num').textContent = 'Pergunta ' + (idx+1) + ' de ' + QUESTIONS.length;
-  document.getElementById('q-text').textContent = q.text;
-  buildProgressBar();
+function showQuestion(index) {
+  const q = QUESTIONS[index];
+  document.getElementById('q-num').textContent = 'Pergunta ' + (index + 1) + ' de ' + QUESTIONS.length;
+  document.getElementById('progress-fill').style.width = (((index + 1) / QUESTIONS.length) * 100) + '%';
+  document.getElementById('q-text').textContent = (index + 1) + '. ' + q.text;
   const opts = document.getElementById('options');
   opts.innerHTML = '';
   q.options.forEach(opt => {
     const btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.innerHTML = '<span class="opt-letter">' + opt.letter + '</span><span>' + opt.text + '</span>';
+    btn.className = 'opt';
+    btn.innerHTML = '<span class="opt-letter">' + opt.letter + '</span><i class="ti ' + opt.icon + '"></i><span>' + opt.text + '</span>';
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      opt.profiles.forEach(p => { profileScores[p] = (profileScores[p] || 0) + 1; });
-      answers.push(opt.letter);
-      setTimeout(() => {
-        currentQ++;
-        if (currentQ < QUESTIONS.length) showQuestion(currentQ);
-        else showResult();
-      }, 380);
+      opt.profiles.forEach(p => profileScores[p] = (profileScores[p] || 0) + 1);
+      currentQ++;
+      if (currentQ < QUESTIONS.length) showQuestion(currentQ);
+      else showResult();
     });
     opts.appendChild(btn);
   });
 }
 
-function showResult() {
+function getProfileResult() {
+  return Object.entries(profileScores).sort((a,b) => b[1] - a[1])[0][0];
+}
+
+async function showResult() {
   const key = getProfileResult();
   const p = PROFILES[key];
-  document.getElementById('result-emoji').textContent = p.emoji;
+  document.getElementById('result-icon').className = 'ti ' + p.icon;
+  document.getElementById('result-icon').style.color = p.color;
   document.getElementById('result-title').textContent = p.title;
   document.getElementById('result-desc').textContent = p.desc;
   document.getElementById('result-traits').innerHTML = p.traits.map(t => '<span class="trait">' + t + '</span>').join('');
-
-  const entryId = userName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-') || 'anonimo-' + Date.now();
-
-  set(ref(database, 'ranking/' + entryId), {
-    name: userName,
-    profileKey: key,
-    createdAt: Date.now()
-  }).catch((error) => {
-    alert('Erro ao salvar no Firebase: ' + error.message);
-  });
-
+  await set(ref(database, 'ranking/' + getSessionId()), { profileKey: key, createdAt: Date.now() });
   show('result');
 }
 
 function renderRanking() {
   const counts = {};
-  ranking.forEach(r => { counts[r.profileKey] = (counts[r.profileKey] || 0) + 1; });
-  const total = ranking.length;
-  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
-  const max = sorted.length ? sorted[0][1] : 1;
-
-  document.getElementById('rank-total-badge').innerHTML = total > 0
-    ? '<div class="total-badge">' + total + (total === 1 ? ' pessoa respondeu' : ' pessoas responderam') + ' nos últimos 10 minutos</div>'
-    : '';
-
+  ranking.forEach(r => counts[r.profileKey] = (counts[r.profileKey] || 0) + 1);
+  const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
   const list = document.getElementById('ranking-list');
-  if (sorted.length === 0) {
-    list.innerHTML = '<div class="empty-ranking"><i class="ti ti-chart-bar"></i>Ninguém respondeu ainda.<br>Seja o primeiro!</div>';
+  if (!sorted.length) {
+    list.innerHTML = '<div class="empty">Ninguém respondeu nos últimos 3 minutos.<br>O ranking está limpo para a próxima rodada.</div>';
     return;
   }
-  list.innerHTML = '';
-  sorted.forEach(([key, count]) => {
+  list.innerHTML = sorted.map(([key, count], i) => {
     const p = PROFILES[key];
-    if (!p) return;
-    const pct = Math.round((count / max) * 100);
-    const div = document.createElement('div');
-    div.className = 'profile-bar-item';
-    div.innerHTML =
-      '<span class="pbi-emoji">' + p.emoji + '</span>' +
-      '<div class="pbi-info">' +
-        '<div class="pbi-title">' + p.title + '</div>' +
-        '<div class="pbi-bar-wrap"><div class="pbi-bar" style="width:0%" data-pct="' + pct + '"></div></div>' +
-      '</div>' +
-      '<span class="pbi-count">' + count + '</span>';
-    list.appendChild(div);
+    return '<div class="rank-row"><div class="pos">' + (i + 1) + '</div><div class="r-title">' + p.title + '</div><div class="r-count">' + count + '</div></div>';
+  }).join('');
+}
+
+function renderProfileCards() {
+  const grid = document.getElementById('profile-grid');
+  grid.innerHTML = Object.values(PROFILES).map(p => `
+    <div class="profile-card">
+      <i class="ti ${p.icon}" style="color:${p.color}"></i>
+      <h3 style="color:${p.color}">${p.title}</h3>
+      <p>${p.desc}</p>
+    </div>
+  `).join('');
+}
+
+function listenRanking() {
+  onValue(rankingRef, (snapshot) => {
+    const now = Date.now();
+    const data = snapshot.val() || {};
+    ranking = Object.entries(data)
+      .filter(([id, item]) => item && item.createdAt && now - item.createdAt < EXPIRATION_MS)
+      .map(([id, item]) => item);
+    renderRanking();
   });
-  setTimeout(() => {
-    document.querySelectorAll('.pbi-bar').forEach(b => {
-      b.style.width = b.dataset.pct + '%';
-    });
-  }, 50);
+}
+
+async function cleanupOldEntries() {
+  const snap = await get(rankingRef);
+  const now = Date.now();
+  const data = snap.val() || {};
+  Object.entries(data).forEach(([id, item]) => {
+    if (!item || !item.createdAt || now - item.createdAt >= EXPIRATION_MS) remove(ref(database, 'ranking/' + id));
+  });
 }
 
 document.getElementById('name-input').addEventListener('input', function() {
@@ -560,49 +450,15 @@ document.getElementById('name-input').addEventListener('input', function() {
 document.getElementById('name-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && userName.length >= 2) document.getElementById('btn-start').click();
 });
-document.getElementById('btn-start').addEventListener('click', () => {
-  profileScores = {}; answers = []; currentQ = 0;
-  showQuestion(0); show('quiz');
-});
-document.getElementById('btn-ranking').addEventListener('click', () => { renderRanking(); show('ranking'); });
-document.getElementById('btn-see-ranking').addEventListener('click', () => { renderRanking(); show('ranking'); });
-document.getElementById('btn-replay').addEventListener('click', () => { profileScores={}; answers=[]; currentQ=0; show('home'); });
-document.getElementById('btn-back-home').addEventListener('click', () => show('home'));
-onValue(ref(database, 'ranking'), (snapshot) => {
-  const data = snapshot.val() || {};
-  const agora = Date.now();
+document.getElementById('btn-start').addEventListener('click', () => { profileScores = {}; currentQ = 0; showQuestion(0); show('quiz'); });
+document.getElementById('btn-ranking').addEventListener('click', () => show('home'));
+document.getElementById('btn-see-ranking').addEventListener('click', () => show('home'));
+document.getElementById('btn-replay').addEventListener('click', () => { profileScores = {}; currentQ = 0; show('home'); });
 
-  ranking = Object.entries(data)
-    .filter(([id, item]) => {
-      const criadoEm = item.createdAt || item.updatedAt || 0;
-      const aindaVale = agora - criadoEm < TEMPO_LIMITE_RANKING;
-
-      if (!aindaVale) {
-        remove(ref(database, 'ranking/' + id)).catch((error) => {
-          console.error('Erro ao limpar resposta antiga:', error);
-        });
-      }
-
-      return aindaVale;
-    })
-    .map(([id, item]) => item);
-
-  renderRanking();
-}, (error) => {
-  console.error('Erro ao ler ranking:', error);
-  const list = document.getElementById('ranking-list');
-  if (list) {
-    list.innerHTML = '<div class="empty-ranking"><i class="ti ti-alert-circle"></i>Erro ao carregar o ranking.<br>Confira as regras do Realtime Database no Firebase.</div>';
-  }
-});
-
-
-setInterval(() => {
-  const agora = Date.now();
-  ranking = ranking.filter(item => agora - (item.createdAt || item.updatedAt || 0) < TEMPO_LIMITE_RANKING);
-  renderRanking();
-}, 15000);
-
+renderProfileCards();
+listenRanking();
+cleanupOldEntries();
+setInterval(cleanupOldEntries, 30000);
 </script>
 </body>
 </html>
