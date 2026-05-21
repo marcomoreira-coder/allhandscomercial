@@ -140,6 +140,31 @@ body::after {
 .profile-card p { color:#d8cff0; font-size:14px; line-height:1.45; }
 .footer { text-align:center; margin-top:36px; color:#c5b8df; font-size:14px; }
 .footer strong { color:var(--cyan); }
+
+.admin-button { margin-top:18px; background:transparent; border:none; color:rgba(255,255,255,.22); font:700 12px 'Montserrat'; letter-spacing:1.4px; text-transform:uppercase; cursor:pointer; transition:.16s ease; }
+.admin-button:hover { color:var(--cyan); }
+.admin-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.72); backdrop-filter:blur(10px); z-index:20; }
+.admin-modal.active { display:flex; }
+.admin-box { width:min(720px, 100%); max-height:min(82vh, 760px); overflow:auto; border-radius:22px; border:1px solid var(--line); background:linear-gradient(145deg, rgba(35,10,74,.96), rgba(9,0,24,.97)); box-shadow:0 30px 90px rgba(0,0,0,.55); padding:26px; }
+.admin-top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:18px; }
+.admin-top h2 { font-size:24px; font-weight:900; text-transform:uppercase; letter-spacing:1px; }
+.admin-top p { color:var(--muted); margin-top:4px; font-size:14px; }
+.admin-close { width:38px; height:38px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.05); color:#fff; cursor:pointer; font-size:20px; }
+.admin-login { display:grid; gap:12px; }
+.admin-login input { width:100%; padding:15px 16px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid var(--line); color:#fff; outline:none; font:600 15px 'Montserrat'; }
+.admin-error { min-height:18px; color:#ff8a8f; font-size:13px; font-weight:700; }
+.admin-content { display:none; }
+.admin-content.active { display:block; }
+.admin-actions { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+.admin-small-btn { padding:11px 14px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.05); color:#fff; font:800 12px 'Montserrat'; text-transform:uppercase; letter-spacing:.7px; cursor:pointer; }
+.admin-small-btn.danger { border-color:rgba(255,78,84,.5); color:#ff8a8f; }
+.admin-list { display:grid; gap:8px; }
+.admin-row { display:grid; grid-template-columns:1.2fr 1fr .8fr; gap:10px; align-items:center; padding:12px; border-radius:14px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); }
+.admin-row strong { font-size:14px; }
+.admin-row span { color:var(--muted); font-size:13px; }
+.admin-empty { padding:28px 10px; color:var(--muted); text-align:center; }
+@media (max-width: 620px) { .admin-row { grid-template-columns:1fr; gap:4px; } }
+
 @media (max-width: 920px) {
   .layout { grid-template-columns:1fr; }
   .side-panel { min-height:auto; }
@@ -210,7 +235,7 @@ body::after {
     <aside class="panel side-panel">
       <div class="rank-head">
         <div class="rank-icon"><i class="ti ti-trophy"></i></div>
-        <div><h2>Ranking ao vivo</h2><p>Últimos 6 minutos</p></div>
+        <div><h2>Ranking ao vivo</h2><p>Tempo real</p></div>
       </div>
       <div class="rank-list" id="ranking-list"></div>
           </aside>
@@ -221,7 +246,33 @@ body::after {
     <div class="profile-grid" id="profile-grid"></div>
   </section>
 
-  <div class="footer"><strong>Grupo Escalar</strong> © 2026 | All Hands</div>
+  <div class="footer"><strong>Grupo Escalar</strong> © 2026 | All Hands<br><button class="admin-button" id="btn-admin">adm</button></div>
+
+  <div class="admin-modal" id="admin-modal" aria-hidden="true">
+    <div class="admin-box">
+      <div class="admin-top">
+        <div>
+          <h2>Painel admin</h2>
+          <p>Área privada para acompanhar as respostas individuais.</p>
+        </div>
+        <button class="admin-close" id="btn-admin-close" aria-label="Fechar">×</button>
+      </div>
+
+      <div class="admin-login" id="admin-login">
+        <input type="password" id="admin-password" placeholder="Senha do admin">
+        <button class="btn btn-main" id="btn-admin-enter">Entrar</button>
+        <div class="admin-error" id="admin-error"></div>
+      </div>
+
+      <div class="admin-content" id="admin-content">
+        <div class="admin-actions">
+          <button class="admin-small-btn" id="btn-admin-refresh">Atualizar painel</button>
+          <button class="admin-small-btn danger" id="btn-admin-clear">Limpar respostas</button>
+        </div>
+        <div class="admin-list" id="admin-list"></div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script type="module">
@@ -240,7 +291,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-const EXPIRATION_MS = 6 * 60 * 1000;
+const EXPIRATION_MS = 15 * 60 * 1000;
 const rankingRef = ref(database, 'ranking');
 
 const QUESTIONS = [
@@ -343,6 +394,8 @@ let userName = '';
 let currentQ = 0;
 let profileScores = {};
 let ranking = [];
+let adminUnlocked = false;
+const ADMIN_PASSWORD = "escalar2026";
 
 function getSessionId() {
   let id = localStorage.getItem('escalar_quiz_session_id');
@@ -392,7 +445,7 @@ async function showResult() {
   document.getElementById('result-title').textContent = p.title;
   document.getElementById('result-desc').textContent = p.desc;
   document.getElementById('result-traits').innerHTML = p.traits.map(t => '<span class="trait">' + t + '</span>').join('');
-  await set(ref(database, 'ranking/' + getSessionId()), { profileKey: key, createdAt: Date.now() });
+  await set(ref(database, 'ranking/' + getSessionId()), { name: userName, profileKey: key, createdAt: Date.now() });
   show('result');
 }
 
@@ -402,7 +455,7 @@ function renderRanking() {
   const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
   const list = document.getElementById('ranking-list');
   if (!sorted.length) {
-    list.innerHTML = '<div class="empty">Ninguém respondeu nos últimos 6 minutos.<br>O ranking está limpo para a próxima rodada.</div>';
+    list.innerHTML = '<div class="empty">Ninguém respondeu ainda.<br>O ranking está aguardando a próxima rodada.</div>';
     return;
   }
   list.innerHTML = sorted.map(([key, count], i) => {
@@ -428,7 +481,8 @@ function listenRanking() {
     const data = snapshot.val() || {};
     ranking = Object.entries(data)
       .filter(([id, item]) => item && item.createdAt && now - item.createdAt < EXPIRATION_MS)
-      .map(([id, item]) => item);
+      .map(([id, item]) => ({ id, ...item }));
+    if (adminUnlocked) renderAdminList();
     renderRanking();
   });
 }
@@ -442,6 +496,80 @@ async function cleanupOldEntries() {
   });
 }
 
+
+function formatTime(ts) {
+  try {
+    return new Date(ts).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  } catch(e) {
+    return '';
+  }
+}
+
+function renderAdminList() {
+  const list = document.getElementById('admin-list');
+  if (!list) return;
+  const now = Date.now();
+  const active = ranking
+    .filter(item => item && item.createdAt && now - item.createdAt < EXPIRATION_MS)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  if (!active.length) {
+    list.innerHTML = '<div class="admin-empty">Nenhuma resposta ativa no momento.</div>';
+    return;
+  }
+
+  list.innerHTML = active.map(item => {
+    const p = PROFILES[item.profileKey] || { title: item.profileKey || 'Sem perfil' };
+    const safeName = (item.name || 'Sem nome').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+    return '<div class="admin-row">' +
+      '<strong>' + safeName + '</strong>' +
+      '<span>' + p.title + '</span>' +
+      '<span>' + formatTime(item.createdAt) + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function openAdminModal() {
+  document.getElementById('admin-modal').classList.add('active');
+  document.getElementById('admin-modal').setAttribute('aria-hidden', 'false');
+  if (adminUnlocked) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-content').classList.add('active');
+    renderAdminList();
+  } else {
+    document.getElementById('admin-login').style.display = 'grid';
+    document.getElementById('admin-content').classList.remove('active');
+    setTimeout(() => document.getElementById('admin-password').focus(), 50);
+  }
+}
+
+function closeAdminModal() {
+  document.getElementById('admin-modal').classList.remove('active');
+  document.getElementById('admin-modal').setAttribute('aria-hidden', 'true');
+}
+
+function unlockAdmin() {
+  const pass = document.getElementById('admin-password').value.trim();
+  if (pass !== ADMIN_PASSWORD) {
+    document.getElementById('admin-error').textContent = 'Senha incorreta.';
+    return;
+  }
+  adminUnlocked = true;
+  document.getElementById('admin-error').textContent = '';
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-content').classList.add('active');
+  renderAdminList();
+}
+
+async function clearRanking() {
+  const ok = confirm('Tem certeza que deseja limpar todas as respostas?');
+  if (!ok) return;
+  await remove(rankingRef);
+  ranking = [];
+  renderRanking();
+  renderAdminList();
+}
+
 document.getElementById('name-input').addEventListener('input', function() {
   userName = this.value.trim();
   document.getElementById('btn-start').disabled = userName.length < 2;
@@ -453,6 +581,15 @@ document.getElementById('btn-start').addEventListener('click', () => { profileSc
 document.getElementById('btn-ranking').addEventListener('click', () => show('home'));
 document.getElementById('btn-see-ranking').addEventListener('click', () => show('home'));
 document.getElementById('btn-replay').addEventListener('click', () => { profileScores = {}; currentQ = 0; show('home'); });
+
+
+document.getElementById('btn-admin').addEventListener('click', openAdminModal);
+document.getElementById('btn-admin-close').addEventListener('click', closeAdminModal);
+document.getElementById('admin-modal').addEventListener('click', function(e) { if (e.target === this) closeAdminModal(); });
+document.getElementById('btn-admin-enter').addEventListener('click', unlockAdmin);
+document.getElementById('admin-password').addEventListener('keydown', function(e) { if (e.key === 'Enter') unlockAdmin(); });
+document.getElementById('btn-admin-refresh').addEventListener('click', renderAdminList);
+document.getElementById('btn-admin-clear').addEventListener('click', clearRanking);
 
 renderProfileCards();
 listenRanking();
